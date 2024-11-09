@@ -38,7 +38,7 @@
 <script>
   const calcDays = () => {
     const curDate = new Date();
-    const targetDate = new Date(2025, 6, 7)
+    const targetDate = new Date(2025, 5/* monthIndex */, 7)
     if (curDate > targetDate) {
       return 0;
     }
