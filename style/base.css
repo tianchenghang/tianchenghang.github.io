@@ -1,8 +1,18 @@
 @font-face {
   font-family: 'LXGW WenKai Lite';
-  src: url('../assets/LXGWWenKaiLite-Regular.ttf') format('truetype');
+  src: url('../assets/HYWenHei-45W.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Iosevka';
+  src: url('../assets/IosevkaSS06-Regular.woff2') format('woff2');
 }
 
 * {
-  font-family: "LXGW Wenkai Lite", sans-serif;
+  font-family: "Iosevka", "HYWenHei", monospace;
+}
+
+.hightlight {
+  color: white;
+  background-color: slateblue;
 }
