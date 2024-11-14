@@ -4,12 +4,12 @@
 }
 
 @font-face {
-  font-family: 'Iosevka';
-  src: url('../assets/IosevkaSS06-Regular.woff2') format('woff2');
+  font-family: 'FiraCode';
+  src: url('../assets/FiraCode-Regular.woff') format('woff');
 }
 
 * {
-  font-family: "Iosevka", "HYWenHei", monospace;
+  font-family: "FiraCode", "HYWenHei", monospace;
 }
 
 .hightlight {
