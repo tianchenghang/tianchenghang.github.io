@@ -4,54 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>高考倒计时</title>
+  <title>天铖的日记</title>
   <style>
-    @font-face {
-      font-family: 'LXGW WenKai Lite';
-      src: url('LXGWWenKaiLite-Regular.ttf') format('truetype');
-    }
-
-    * {
-      font-family: "LXGW Wenkai Lite", sans-serif;
-    }
-
-    .content {
-      height: 300px;
-      line-height: 300px;
-      text-align: center;
-      font-size: 50px;
-      width: 500px;
-      border: 3px solid lightpink;
-      margin: 100px auto 0;
-      background-color: lightblue;
-      color: white;
-    }
   </style>
 </head>
 
 <body>
-  <div class="content">
-    距离高考还有 {{ days }} 天
-  </div>
+  <a href="./2024/11/14.html">2024-11-14</a>
 </body>
 
 <script>
-  const calcDays = () => {
-    const curDate = new Date();
-    const targetDate = new Date(2025, 5/* monthIndex */, 7)
-    if (curDate > targetDate) {
-      return 0;
-    }
-    const oneDayMills = 24 * 60 * 60 * 1000;
-    const allDaysMillis = targetDate.getTime() - curDate.getTime();
-    return Math.round(allDaysMillis / oneDayMills);
-  }
-  const days = calcDays();
-  if (days === 0) {
-    document.querySelector(".content").innerHTML = "高考加油"
-  }
-  document.querySelector(".content").innerHTML =
-    document.querySelector(".content").innerHTML.replace("{{ days }}", `${days}`)
+
 </script>
 
 </html>

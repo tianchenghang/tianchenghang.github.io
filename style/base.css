@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'LXGW WenKai Lite';
+  src: url('../assets/LXGWWenKaiLite-Regular.ttf') format('truetype');
+}
+
+* {
+  font-family: "LXGW Wenkai Lite", sans-serif;
+}
