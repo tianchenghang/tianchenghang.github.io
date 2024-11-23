@@ -1,8 +1,0 @@
-@font-face {
-  font-family: "XiaolaiMonoSC";
-  src: url("../assets/XiaolaiMonoSC-Regular.ttf") format("truetype");
-}
-
-* {
-  font-family: "XiaolaiMonoSC", emoji;
-}
