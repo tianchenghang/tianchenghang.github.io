@@ -1,18 +1,8 @@
 @font-face {
-  font-family: 'LXGW WenKai Lite';
-  src: url('../assets/HYWenHei-45W.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'FiraCode';
-  src: url('../assets/FiraCode-Regular.woff') format('woff');
+  font-family: "XiaolaiMonoSC";
+  src: url("../assets/XiaolaiMonoSC-Regular.ttf") format("truetype");
 }
 
 * {
-  font-family: "FiraCode", "HYWenHei", monospace;
-}
-
-.hightlight {
-  color: white;
-  background-color: slateblue;
+  font-family: "XiaolaiMonoSC", emoji;
 }
