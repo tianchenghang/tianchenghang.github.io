@@ -1,10 +1,13 @@
-# ECMAScript 6 学习
+# ECMA Script 6 学习
 
-面试小助手 [161043261.github.io](https://161043261.github.io)
+[161043261.github.io](https://161043261.github.io)
 
-联系我 yukino161043261@gmal.com
+```sh
+npm install prettier -g
+prettier --write ./
+```
 
-1. [ECMAScript 6简介](./ch01.md)
+1. [ECMA Script 6简介](./ch01.md)
 
 2. [var, let, const](./ch02.md)
 
