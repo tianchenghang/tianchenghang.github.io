@@ -12,3 +12,5 @@ prettier --write ./
 2. [var, let, const](./ch02.md)
 
 3. [变量的解构赋值](./ch03.md)
+
+4. [](./ch04.md)

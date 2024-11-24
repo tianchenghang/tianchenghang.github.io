@@ -31,7 +31,7 @@
 - axios, lodash
 - vue2
 - vue3
-- element plus
+- element plus/ant-design
 - echarts
 - 微前端
 - 前端性能
