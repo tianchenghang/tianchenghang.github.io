@@ -10,21 +10,19 @@
 
 4. [模板字符串](./ch04.md)
 
-5. [字符串方法](./ch05.md)
+5. [字符串方法, 正则表达式](./ch05.md)
 
-6. [正则表达式](./ch06.md)
+6. [数值](./ch06.md)
 
-7. [数值](./ch07.md)
+7. [函数](./ch07.md)
 
-8. [函数](./ch08.md)
+8. [数组](./ch08.md)
 
-9. [数组](./ch09.md)
+9. [对象](./ch09.md)
 
-10 [对象](./ch10.md)
+10 [对象方法](./ch10.md)
 
-11 [对象方法](./ch11.md)
-
-12 [运算符](./ch12.md)
+11 [运算符](./ch11.md)
 
 ## 其他
 
@@ -53,15 +51,12 @@
 })();
 ```
 
-英文字体
+字体
 
-[Iosevka](https://github.com/be5invis/Iosevka)
-
-中英文字体
-
-[小赖字体](https://github.com/lxgw/kose-font)
-[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
-[更纱黑体](https://github.com/be5invis/Sarasa-Gothic)
+- [Iosevka](https://github.com/be5invis/Iosevka)
+- [霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
+- [小赖字体](https://github.com/lxgw/kose-font)
+- [更纱黑体](https://github.com/be5invis/Sarasa-Gothic)
 
 其他阅读
 
