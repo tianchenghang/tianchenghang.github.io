@@ -14,6 +14,6 @@ The terms foobar, foo, bar, baz and others are used as metasyntactic variables a
 - [ch06](./ch06.md): 2024-11-24
 - [ch07](./ch07.md): 2024-11-25
 - [ch08](./ch08.md): 2024-11-26
-- [ch09](./ch09.md): 2024-11-28
-- [ch10](./ch10.md): 2024-11-29
-- [ch11](./ch11.md): 2024-11-30
+- [ch09](./ch09.md): 2024-11-27
+- [ch10](./ch10.md): 2024-11-28
+- [ch11](./ch11.md): 2024-11-29
