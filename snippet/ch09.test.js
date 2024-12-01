@@ -44,26 +44,27 @@ test("Test_Symbol.isConcatSpreadable", () => {
 
 test("Test_Symbol.species", () => {
   // Test1
-  class ArrExt extends Array {
+  class ArrExt1 extends Array {}
+
+  const a = new ArrExt1(1, 2, 3);
+  console.log(a instanceof ArrExt1); // true
+  console.log(a.map((x) => x) instanceof ArrExt1); // true
+
+  // Test2
+  class ArrExt2 extends Array {
     static get [Symbol.species]() {
       return Array;
     }
   }
 
-  const a = new ArrExt();
-  const b = a.map((x) => x);
+  const b = new ArrExt2(1, 2, 3);
+  console.log(b instanceof ArrExt2); // true
+  console.log(b.map((x) => x) instanceof ArrExt2); // false
+  console.log(b.filter((x) => true) instanceof ArrExt2); // false
+  console.log(b.map((x) => x) instanceof Array); // true
+  console.log(b.filter((x) => true) instanceof Array); // true
 
-  console.log(a instanceof ArrExt); // true
-  console.log(a instanceof Array); // true
-  console.log(ArrExt[Symbol.hasInstance](a)); // true
-  console.log(Array[Symbol.hasInstance](a)); // true
-
-  console.log(b instanceof ArrExt); // false
-  console.log(b instanceof Array); // true
-  console.log(ArrExt[Symbol.hasInstance](b)); // false
-  console.log(Array[Symbol.hasInstance](b)); // true
-
-  // Test2
+  // Test3
   class P1 extends Promise {}
 
   class P2 extends Promise {
@@ -78,4 +79,79 @@ test("Test_Symbol.species", () => {
   console.log(
     new P2((resolve, reject) => resolve).then((value) => value) instanceof P2,
   ); // false
+});
+
+test("Test_Symbol.match", () => {
+  // str.match(regexp)
+  console.log("hello".match("el").index); // 1
+  // 等价于 regexp[Symbol.match](str)
+  console.log(RegExp("el")[Symbol.match]("hello").index); // 1
+});
+
+test("Test_Symbol.replace", () => {
+  // str.replace(regexp, replaceValue)
+  console.log("hello".replace("el", "a")); // halo
+  // 等价于 regexp[Symbol.replace](str, replaceValue)
+  console.log(RegExp("el")[Symbol.replace]("hello", "a")); // halo
+});
+
+test("Test_Symbol.search", () => {
+  // str.search(regexp)
+  console.log("hello".search("el")); // 1
+  // 等价于 regexp[Symbol.search](str)
+  console.log(RegExp("el")[Symbol.search]("hello")); // 1
+});
+
+test("Test_Symbol.split", () => {
+  // str.split(regexp, limit)
+  console.log("hello".split("", -1)); // [ 'h', 'e', 'l', 'l', 'o' ]
+  // 等价于 regexp[Symbol.split](str, limit)
+  console.log(RegExp("")[Symbol.split]("hello", -1)); // [ 'h', 'e', 'l', 'l', 'o' ]
+});
+
+test("Test_Symbol.iterator", () => {
+  const iter = {};
+  iter[Symbol.iterator] = function* () {
+    yield 3;
+    yield 2;
+    yield 1;
+  };
+  console.log([...iter]); // [3, 2, 1]
+  for (let val of iter) {
+    console.log(val); // 3 2 1
+  }
+});
+
+test("Test_Symbol.toPrimitive", () => {
+  let obj = {
+    [Symbol.toPrimitive](hint) {
+      switch (hint) {
+        case "number": // 需要转换为数值的场景
+          return 416;
+        case "string": // 需要转换为字符串的场景
+          return "lzy";
+        case "default": // 不确定
+          return "what";
+        default:
+          throw new Error();
+      }
+    },
+  };
+  console.log(2 * obj); // 832
+  console.log(2 + obj); // 2what
+  console.log(obj == "what"); // true
+  console.log(String(obj)); // lzy
+});
+
+test("Test_Symbol.toStringTag", () => {
+  // 属性
+  console.log({ [Symbol.toStringTag]: "Foo" }.toString()); // [object Foo]
+  // getter
+  class Bar {
+    get [Symbol.toStringTag]() {
+      return "Bar";
+    }
+  }
+  console.log(new Bar().toString()); // [object Bar]
+  console.log(Object.prototype.toString.call(new Bar())); // [object Bar]
 });
