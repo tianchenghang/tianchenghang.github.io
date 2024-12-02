@@ -3,7 +3,7 @@
 ## 目录
 
 1. [babel 转码](./ch01.md)
-2. [var, let, const](./ch02.md)
+2. [let, const](./ch02.md)
 3. [变量的解构赋值](./ch03.md)
 4. [模板字符串](./ch04.md)
 5. [字符串方法, 正则表达式](./ch05.md)
@@ -15,6 +15,20 @@
 11. [运算符](./ch11.md)
 12. [Symbol](./ch12.md)
 13. [Set, Map](./ch13.md)
+14. [Proxy](./ch14.md)
+15. [Reflect](./ch15.md)
+16. [Promise](./ch16.md)
+17. [Iterator](./ch17.md)
+18. [Generator](./ch18.md)
+19. [异步 Generator](./ch19.md)
+20. [async](./ch20.md)
+21. [class](./ch21.md)
+22. [class 继承](./ch22.md)
+23. [module](./ch23.md)
+24. [module 加载](./ch24.md)
+25. [异步 Iterator](./ch25.md)
+26. [ArrayBuffer](./ch26.md)
+27. [Decorator](./ch27.md)
 
 ## 其他
 
