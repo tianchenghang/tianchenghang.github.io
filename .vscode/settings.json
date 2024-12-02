@@ -1,3 +1,4 @@
 {
-  "editor.fontFamily": "JS, LXGW WenKai"
+  "editor.fontFamily": "JS, LXGW WenKai",
+  "catppuccin.italicKeywords": true
 }
