@@ -1,21 +1,30 @@
 # 前端
 
-- html, html5
-- css, css3
-- javascript, es6
+- html5
+- css3, tailwind, sass
+- js, es6
   - promise, async/await
-- typescript
+- ts
 - node
-- mongodb
 - npm, pnpm
-- lodash, axios
-- vue2
-- vue3
+- mongodb
+- jtest, vitest
+- webpack, vite
+- axios, fetch, lodash
+- vue2/vue3
 - element plus
 - echarts
-- 网络
 - 微前端
-- 前端性能优化
+- 前端性能
+- 计算机网络
+
+前端性能
+
+- PRPL 模式 (Preload, Render, Pre-cache, Lazy load)
+- 强缓存, 协商缓存
+- [Web Socket](https://developer.mozilla.org/zh-CN/docs/Web/API/WebSocket)
+- [Web Worker](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API)
+- [Service Worker](https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API)
 
 ## 其他
 
