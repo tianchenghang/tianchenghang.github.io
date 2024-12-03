@@ -1,94 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        font-family:
+          JS,
+          Iosevka SS06,
+          emoji;
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    * {
-      font-family: JS, Iosevka SS06, emoji;
-    }
-  </style>
-</head>
+  <body></body>
 
-<body></body>
-
-<script>
-  let pipe = function (val) {
-    let fnStack = [];
-    let po = new Proxy(
-      {}, // target
-      {
-        get: function (obj, fnName) {
-          if (fnName === "get") {
-            return fnStack.reduce(function (val, fn) {
-              return fn(val);
-            }, val);
-          }
-          // fnName !== "get"
-          console.log(window[fnName]);
-          fnStack.push(window[fnName]);
-          return po;
-        },
-      }, // handler
-    );
-    return po;
-  };
-
-  function mul2(x) {
-    return x * 2;
-  }
-
-  function pow2(x) {
-    return x * x;
-  }
-
-  function _rev(x) {
-    return x.toString().split("").reverse().join("");
-  }
-
-  console.log(pipe(3).mul2.pow2._rev.get); // 63
-</script>
-
-<script>
-  const domProxy = new Proxy(
-    {},
-    {
-      get(target, propKey, receiver) {
-        return function (attrs = {}, ...children) {
-          const el = document.createElement(propKey);
-          for (let prop of Object.keys(attrs)) {
-            el.setAttribute(prop, attrs[prop]);
-          }
-          for (let child of children) {
-            if (typeof child === "string") {
-              child = document.createTextNode(child);
+  <script>
+    let pipe = function (val) {
+      let fnStack = [];
+      let po = new Proxy(
+        {}, // target
+        {
+          get: function (obj, fnName) {
+            if (fnName === "get") {
+              return fnStack.reduce(function (val, fn) {
+                return fn(val);
+              }, val);
             }
-            el.appendChild(child);
-          }
-          return el;
-        };
-      },
-    },
-  );
+            // fnName !== "get"
+            console.log(window[fnName]);
+            fnStack.push(window[fnName]);
+            return po;
+          },
+        }, // handler
+      );
+      return po;
+    };
 
-  const el = domProxy.div(
-    {},
-    "Genshin Impact ",
-    domProxy.a({ href: "https://wiki.hoyolab.com/pc/genshin/" }, "HoYoWiki"),
-    ", Inazuma City:",
-    domProxy.ul(
+    function mul2(x) {
+      return x * 2;
+    }
+
+    function pow2(x) {
+      return x * x;
+    }
+
+    function _rev(x) {
+      return x.toString().split("").reverse().join("");
+    }
+
+    console.log(pipe(3).mul2.pow2._rev.get); // 63
+  </script>
+
+  <script>
+    const domProxy = new Proxy(
       {},
-      domProxy.li({}, "Raiden Shogun"),
-      domProxy.li({}, "Kamisato Ayaka"),
-      domProxy.li({}, "Sangonomiya Kokomi"),
-      domProxy.li({}, "Kaedehara Kazuha"),
-      domProxy.li({}, "Yoimiya"),
-      domProxy.li({}, "Yae Miko"),
-    ),
-  );
-  document.body.appendChild(el);
-</script>
+      {
+        get(target, propKey, receiver) {
+          return function (attrs = {}, ...children) {
+            const el = document.createElement(propKey);
+            for (let prop of Object.keys(attrs)) {
+              el.setAttribute(prop, attrs[prop]);
+            }
+            for (let child of children) {
+              if (typeof child === "string") {
+                child = document.createTextNode(child);
+              }
+              el.appendChild(child);
+            }
+            return el;
+          };
+        },
+      },
+    );
 
+    const el = domProxy.div(
+      {},
+      "Genshin Impact ",
+      domProxy.a({ href: "https://wiki.hoyolab.com/pc/genshin/" }, "HoYoWiki"),
+      ", Inazuma City:",
+      domProxy.ul(
+        {},
+        domProxy.li({}, "Raiden Shogun"),
+        domProxy.li({}, "Kamisato Ayaka"),
+        domProxy.li({}, "Sangonomiya Kokomi"),
+        domProxy.li({}, "Kaedehara Kazuha"),
+        domProxy.li({}, "Yoimiya"),
+        domProxy.li({}, "Yae Miko"),
+      ),
+    );
+    document.body.appendChild(el);
+  </script>
 </html>
