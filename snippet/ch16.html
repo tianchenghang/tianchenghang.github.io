@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    new Promise(
+      function (resolve, reject) {
+        resolve(what);
+      } /* executor */,
+    )
+      .then((value) => console.log(value) /* onfulfilled */)
+      // ReferenceError: what is not defined
+      .catch((reason) => console.log(reason) /* onrejected */);
+
+    let p = new Promise(function (resolve, reject) {
+      resolve("I'm OK");
+      // setTimeout(): 错误在下一轮事件循环时被抛出
+      // 抛出错误时, p.then() 执行结束
+      // 错误在 Promise 构造函数体外被抛出, 冒泡到最外层, 成为未捕获的错误
+      setTimeout(function () {
+        throw new Error("why");
+      }, 0);
+    });
+    p.then(function (value) {
+      console.log(value); // I'm OK
+    }); // Uncaught Error: why
+  </script>
+</html>
