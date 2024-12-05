@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import {expect, test} from "vitest";
 
 test("Test_Promise1", () => {
   let p = new Promise(
@@ -35,9 +35,10 @@ test(
 
     await p2
       .then((value) => console.log(value))
+      // ! catch(onrejected) 等价于 then(undefined, onrejected)
       .catch((reason) => console.log(reason.toString().split("\n")[0])); // Error: what
   },
-  { timeout: 5500 },
+  {timeout: 5500},
 );
 
 test("Test_Promise3", () => {
@@ -61,9 +62,9 @@ test("Test_Promise3", () => {
   });
 });
 
-// 最佳实践
+//! 最佳实践
 // 1. then() 方法中的 onrejected 回调函数 (即 then() 方法的第 2 个参数) 可以理解为一种 recover
-// 2. 不要定义 then() 方法中的 onrejected 回调函数, 定义 catch () 方法中的 onrejected 回调函数(即 catch () 方法的第 1 个参数)
+// 2. 不要定义 then() 方法中的 onrejected 回调函数, 定义 catch () 方法中的 onrejected 回调函数 (即 catch () 方法的第 1 个参数)
 
 test(
   "Test_Promise4",
@@ -110,28 +111,33 @@ test(
     // onFinally
     // caught: I'm bastard
   },
-  { timeout: 5500 },
+  {timeout: 5500},
 );
 
 test("Test_Promise5", () => {
+  //! Promise.resolve(value) 等价于 new Promise((resolve, reject) => resolve(value))
   Promise.resolve(1).then(
     (value) => {
       console.log(value); // 1
       /* return undefined */
     },
-    () => {},
+    () => {
+    },
   ); // Promise{ PromiseState: "fulfilled", PromiseResult: undefined }
 
   Promise.resolve(2)
     .finally(
-      () => {},
+      () => {
+      },
     ) /* Promise{ PromiseState: "fulfilled", PromiseResult: 2 } */
     .then((value) => {
       console.log(value); // 2
     });
 
+  //! Promise.reject(reason) 等价于 new Promise((resolve, reject) => reject(reason))
   Promise.reject(3).then(
-    () => {},
+    () => {
+    },
     (reason) => {
       console.log(reason); // 3
       /* return undefined */
@@ -140,7 +146,110 @@ test("Test_Promise5", () => {
 
   Promise.reject(4)
     .finally(
-      () => {},
+      () => {
+      },
     ) /* Promise{ PromiseState: "rejected", PromiseResult: 4 } */
     .catch((reason) => console.log(reason));
+});
+
+test("Test_Promise_allSettled", async () => {
+  let p1 = Promise.resolve(1);
+  let p2 = Promise.reject(0);
+  let ps = Promise.allSettled([p1, p2]);
+  /**
+   * Promise{ PromiseState: "fulfilled", PromiseReturn: [
+   *   { status: 'fulfilled', value: 1 },
+   *   { status: 'rejected', reason: 0 }
+   * ] }
+   */
+  let ret = await ps.then((value) => {
+    console.log(value);
+    return value;
+  });
+
+  // { status: 'fulfilled', value: 1 }
+  ret
+    .filter((item) => item.status === "fulfilled")
+    .forEach((value) => console.log(value));
+  // { status: 'rejected', reason: 0 }
+  ret
+    .filter((item) => item.status === "rejected")
+    .forEach((reason) => console.warn(reason));
+});
+
+test("Test_Promise_any", async () => {
+  let ps = [
+    fetch("https://bh3.mihoyo.com/").then((resp) => resp),
+    fetch("https://ys.mihoyo.com/").then((resp) => resp),
+    fetch("https://sr.mihoyo.com/").then((resp) => resp),
+  ];
+  try {
+    const first = await Promise.any(ps);
+    console.log(first);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+test(
+  "Test_Promise_any_AggregateError",
+  async () => {
+    Promise.any([Promise.reject(Infinity), Promise.reject(NaN)]).catch(
+      function (reason) {
+        console.log(reason instanceof AggregateError); // true
+        console.log(reason.errors); // [ Infinity, NaN ]
+      },
+    );
+
+    await Promise.any([
+      Promise.reject(-Infinity),
+      (() =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => reject(NaN), 3000);
+        }))(),
+    ]).catch(function (reason) {
+      console.log(reason.constructor === AggregateError); // true
+      console.log(
+        Reflect /* Object */.getPrototypeOf(reason) ===
+        AggregateError.prototype,
+      ); // true
+      console.log(reason.errors); // [ -Infinity, NaN ]
+    });
+  },
+  {timeout: 3500},
+);
+
+// TODO
+test("Test_Promise_Generator", () => {
+  let makeGen = function* () {
+    try {
+      let foo /* : string */ = yield new Promise(function (resolve, reject) {
+        resolve("foo");
+      });
+      console.log(foo, typeof foo); // foo string
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  (function (makeGen) {
+    let gen = makeGen();
+    function go(
+      res /* IteratorYieldResult{ done: boolean, value: Promise } */,
+    ) {
+      if (res.done) {
+        return res.value;
+      }
+      return res.value.then(
+        function (value) {
+          console.log(value)
+          return go(gen.next(value));
+        } /* onfulfilled */,
+        function (reason) {
+          return go(gen.throw(reason));
+        } /* onrejected */,
+      );
+    }
+    go(gen.next()/* IteratorYieldResult{ done: boolean, value: Promise } */);
+  })(makeGen);
 });
