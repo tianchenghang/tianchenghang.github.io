@@ -1,4 +1,4 @@
-import {expect, test} from "vitest";
+import { expect, test } from "vitest";
 
 test("Test_Promise1", () => {
   let p = new Promise(
@@ -38,7 +38,7 @@ test(
       // ! catch(onrejected) 等价于 then(undefined, onrejected)
       .catch((reason) => console.log(reason.toString().split("\n")[0])); // Error: what
   },
-  {timeout: 5500},
+  { timeout: 5500 },
 );
 
 test("Test_Promise3", () => {
@@ -111,7 +111,7 @@ test(
     // onFinally
     // caught: I'm bastard
   },
-  {timeout: 5500},
+  { timeout: 5500 },
 );
 
 test("Test_Promise5", () => {
@@ -121,14 +121,12 @@ test("Test_Promise5", () => {
       console.log(value); // 1
       /* return undefined */
     },
-    () => {
-    },
+    () => {},
   ); // Promise{ PromiseState: "fulfilled", PromiseResult: undefined }
 
   Promise.resolve(2)
     .finally(
-      () => {
-      },
+      () => {},
     ) /* Promise{ PromiseState: "fulfilled", PromiseResult: 2 } */
     .then((value) => {
       console.log(value); // 2
@@ -136,8 +134,7 @@ test("Test_Promise5", () => {
 
   //! Promise.reject(reason) 等价于 new Promise((resolve, reject) => reject(reason))
   Promise.reject(3).then(
-    () => {
-    },
+    () => {},
     (reason) => {
       console.log(reason); // 3
       /* return undefined */
@@ -146,8 +143,7 @@ test("Test_Promise5", () => {
 
   Promise.reject(4)
     .finally(
-      () => {
-      },
+      () => {},
     ) /* Promise{ PromiseState: "rejected", PromiseResult: 4 } */
     .catch((reason) => console.log(reason));
 });
@@ -211,45 +207,58 @@ test(
       console.log(reason.constructor === AggregateError); // true
       console.log(
         Reflect /* Object */.getPrototypeOf(reason) ===
-        AggregateError.prototype,
+          AggregateError.prototype,
       ); // true
       console.log(reason.errors); // [ -Infinity, NaN ]
     });
   },
-  {timeout: 3500},
+  { timeout: 3500 },
 );
 
 // TODO
 test("Test_Promise_Generator", () => {
   let makeGen = function* () {
     try {
-      let foo /* : string */ = yield new Promise(function (resolve, reject) {
+      let value /* : string */ = yield new Promise(function (resolve, reject) {
         resolve("foo");
       });
-      console.log(foo, typeof foo); // foo string
+      console.log("2nd:", value);
     } catch (err) {
       console.log(err);
     }
   };
 
-  (function (makeGen) {
-    let gen = makeGen();
-    function go(
-      res /* IteratorYieldResult{ done: boolean, value: Promise } */,
-    ) {
-      if (res.done) {
-        return res.value;
-      }
-      return res.value.then(
-        function (value) {
-          console.log(value)
-          return go(gen.next(value));
-        } /* onfulfilled */,
-        function (reason) {
-          return go(gen.throw(reason));
-        } /* onrejected */,
-      );
+  let gen = makeGen();
+
+  function go(res /* IteratorYieldResult{ done: boolean, value: Promise } */) {
+    if (res.done) {
+      return res.value;
     }
-    go(gen.next()/* IteratorYieldResult{ done: boolean, value: Promise } */);
-  })(makeGen);
+    return res.value.then(
+      function (value) {
+        console.log("1st:", value);
+        return go(gen.next(value));
+      } /* onfulfilled */,
+      function (reason) {
+        return go(gen.throw(reason));
+      } /* onrejected */,
+    );
+  }
+
+  go(gen.next() /* IteratorYieldResult{ done: boolean, value: Promise } */);
+});
+
+// TODO 3rd 4th 5th 6th 7th 8th 9th 1st 2nd
+test("Test_Promise6", () => {
+  Promise.resolve().then((value) => console.log("1st")); // 异步
+  Promise.resolve().then((value) => (async () => console.log("2nd"))()); // 异步
+  console.log("3rd");
+
+  (() => console.log("4th"))(); //同步
+  (async () => console.log("5th"))(); // 同步
+  console.log("6th");
+
+  new Promise((resolve, reject) => resolve(console.log("7th"))); // 同步
+  new Promise((resolve, reject) => resolve((async () => console.log("8th"))())); // 同步
+  console.log("9th");
 });
