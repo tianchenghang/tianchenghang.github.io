@@ -1,4 +1,4 @@
-import { test } from "vitest";
+import { expect, test } from "vitest";
 
 test("Test_Promise1", () => {
   let p = new Promise(
@@ -64,3 +64,83 @@ test("Test_Promise3", () => {
 // 最佳实践
 // 1. then() 方法中的 onrejected 回调函数 (即 then() 方法的第 2 个参数) 可以理解为一种 recover
 // 2. 不要定义 then() 方法中的 onrejected 回调函数, 定义 catch () 方法中的 onrejected 回调函数(即 catch () 方法的第 1 个参数)
+
+test(
+  "Test_Promise4",
+  async () => {
+    Promise.prototype.finally = function (callback) {
+      let P = this.constructor;
+      expect(P).toBe(Promise);
+      return this.then(
+        (value) => {
+          console.log("value:", value); // value: I'm OK
+          return P.resolve(callback()).then(() => {
+            return value;
+          });
+        } /* onfulfilled */,
+        (reason) => {
+          console.log("reason:", reason);
+          return P.resolve(callback()).then(() => {
+            throw reason;
+          });
+        } /* onrejected */,
+      );
+    };
+
+    await new Promise((resolve, reject) => {
+      resolve("I'm OK");
+    }).finally(() => {
+      console.log("onFinally");
+    });
+    // value: I'm OK
+    // onFinally
+
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject("I'm bastard");
+      }, 5000);
+    })
+      .finally(() => {
+        console.log("onFinally");
+      })
+      .catch((reason) => {
+        console.log("caught:", reason);
+      });
+    // reason: I'm bastard
+    // onFinally
+    // caught: I'm bastard
+  },
+  { timeout: 5500 },
+);
+
+test("Test_Promise5", () => {
+  Promise.resolve(1).then(
+    (value) => {
+      console.log(value); // 1
+      /* return undefined */
+    },
+    () => {},
+  ); // Promise{ PromiseState: "fulfilled", PromiseResult: undefined }
+
+  Promise.resolve(2)
+    .finally(
+      () => {},
+    ) /* Promise{ PromiseState: "fulfilled", PromiseResult: 2 } */
+    .then((value) => {
+      console.log(value); // 2
+    });
+
+  Promise.reject(3).then(
+    () => {},
+    (reason) => {
+      console.log(reason); // 3
+      /* return undefined */
+    },
+  ); // Promise{ PromiseState: "fulfilled", PromiseResult: undefined }
+
+  Promise.reject(4)
+    .finally(
+      () => {},
+    ) /* Promise{ PromiseState: "rejected", PromiseResult: 4 } */
+    .catch((reason) => console.log(reason));
+});

@@ -5,17 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+
   <body></body>
   <script>
-    new Promise(
-      function (resolve, reject) {
-        resolve(what);
-      } /* executor */,
-    )
-      .then((value) => console.log(value) /* onfulfilled */)
-      // ReferenceError: what is not defined
-      .catch((reason) => console.log(reason) /* onrejected */);
-
     let p = new Promise(function (resolve, reject) {
       resolve("I'm OK");
       // setTimeout(): 错误在下一轮事件循环时被抛出
