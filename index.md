@@ -1,5 +1,7 @@
 # ECMAScript 6 教程
 
+[直播间](./snippet/index.html)
+
 ## 目录
 
 1. [babel 转码](./ch01.md)
