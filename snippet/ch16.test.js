@@ -3,17 +3,17 @@ import { expect, test } from "vitest";
 test("Test_Promise1", () => {
   let p = new Promise(
     function (resolve, reject) {
-      console.log("1st"); // 立刻执行
+      console.log("first"); // 立刻执行
       return resolve();
     } /* executor */,
   );
 
   p.then(
     function () {
-      console.log("3rd");
+      console.log("third");
     } /* onfulfilled */,
   );
-  console.log("2nd");
+  console.log("second");
 });
 
 test(
@@ -21,14 +21,14 @@ test(
   async () => {
     let p1 = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        console.log("2nd");
+        console.log("second");
         return reject(new Error("what") /* reason */);
       }, 5000);
     });
 
     let p2 = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        console.log("1st");
+        console.log("first");
         return resolve(p1 /* value */);
       }, 3000);
     });
@@ -222,7 +222,7 @@ test("Test_Promise_Generator", () => {
       let value /* : string */ = yield new Promise(function (resolve, reject) {
         resolve("foo");
       });
-      console.log("2nd:", value);
+      console.log("second:", value);
     } catch (err) {
       console.log(err);
     }
@@ -236,7 +236,7 @@ test("Test_Promise_Generator", () => {
     }
     return res.value.then(
       function (value) {
-        console.log("1st:", value);
+        console.log("first:", value);
         return go(gen.next(value));
       } /* onfulfilled */,
       function (reason) {

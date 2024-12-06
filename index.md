@@ -1,7 +1,5 @@
 # ECMAScript 6 教程
 
-[直播间](./snippet/index.html)
-
 ## 目录
 
 1. [babel 转码](./ch01.md)
@@ -28,7 +26,7 @@
 22. [class 继承](./ch22.md)
 23. [module](./ch23.md)
 24. [module 加载](./ch24.md)
-25. [异步 Iterator](./ch25.md)
+25. [异步遍历](./ch25.md)
 26. [ArrayBuffer](./ch26.md)
 27. [Decorator](./ch27.md)
 

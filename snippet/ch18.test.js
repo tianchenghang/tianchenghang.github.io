@@ -58,3 +58,11 @@ test("Test_Generator3", () => {
     console.log(key, "=>", val);
   }
 });
+
+test("Test_new", () => {
+  function make() {
+    console.log(new.target);
+  }
+  make(); // undefined
+  new make(); // [Function: make]
+});
