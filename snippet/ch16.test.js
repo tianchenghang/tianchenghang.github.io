@@ -217,7 +217,7 @@ test(
 
 // TODO
 test("Test_Promise_Generator", () => {
-  let makeGen = function* () {
+  let genFunc = function* () {
     try {
       let value /* : string */ = yield new Promise(function (resolve, reject) {
         resolve("foo");
@@ -228,7 +228,7 @@ test("Test_Promise_Generator", () => {
     }
   };
 
-  let gen = makeGen();
+  let gen = genFunc();
 
   function go(res /* IteratorYieldResult{ done: boolean, value: Promise } */) {
     if (res.done) {
