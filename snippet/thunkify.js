@@ -25,7 +25,7 @@ function thunkify(fn) {
       try {
         fn.call(ctx, ...args);
       } catch (e) {
-        callback(err); // callback 回调函数的第一个参数是 Error 对象
+        callback(e); // callback 回调函数的第一个参数是 Error 对象
       }
     };
   };

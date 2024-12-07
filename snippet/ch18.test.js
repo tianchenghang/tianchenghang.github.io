@@ -72,13 +72,13 @@ test("Test_Generator4", () => {
   const fs = require("fs");
 
   function* genFunc() {
-    yield fs.readFile.bind(null, "../ch16.md", (err, data) =>
+    yield fs.readFile.bind(null, "../package.json", (err, data) =>
       console.log(data),
     );
-    yield fs.readFile.bind(null, "../ch17.md", (err, data) =>
+    yield fs.readFile.bind(null, "../README.md", (err, data) =>
       console.log(data),
     );
-    yield fs.readFile.bind(null, "../ch18.md", (err, data) =>
+    yield fs.readFile.bind(null, "../tsconfig.json", (err, data) =>
       console.log(data),
     );
   }
@@ -154,15 +154,47 @@ test("Test_Pub_Sub", () => {
   evEmitter.emit("click", 7, 8, 9);
 });
 
-test("Test_Thunkify", () => {
+test("Test_Thunkify1", () => {
   const thunkify = require("./thunkify");
+
   function fn(a, b, callback) {
     let sum = a + b;
     callback(sum);
     callback(sum);
   }
+
   let thunk = thunkify(fn);
   let print /* callback */ = console.log.bind(console);
   let fnThunk = thunk(1, 2);
   fnThunk(print); // 3
+});
+
+test("Test_Thunkify2", () => {
+  const fs = require("fs");
+  const thunkify = require("./thunkify");
+  let readFileThunk = thunkify(fs.readFile);
+  let genFunc = function* () {
+    let data1 = yield readFileThunk("./package.json");
+    console.log(data1.toString());
+    let data2 = yield readFileThunk("./README.md");
+    console.log(data2.toString());
+  };
+  let gen = genFunc();
+  let ret1 = gen.next();
+  ret1.value(
+    /* callback */ function (err, data1) {
+      if (err) {
+        throw err;
+      }
+      let ret2 = gen.next(data1);
+      ret2.value(
+        /* callback */ function (err, data2) {
+          if (err) {
+            throw err;
+          }
+          let ret3 = gen.next(data2);
+        },
+      );
+    },
+  );
 });
