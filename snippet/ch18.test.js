@@ -63,6 +63,27 @@ test("Test_new", () => {
   function make() {
     console.log(new.target);
   }
+
   make(); // undefined
   new make(); // [Function: make]
+});
+
+test("Test_Generator4", () => {
+  const fs = require("fs");
+
+  function* genFunc() {
+    yield fs.readFile.bind(null, "../ch16.md", (err, data) =>
+      console.log(data),
+    );
+    yield fs.readFile.bind(null, "../ch17.md", (err, data) =>
+      console.log(data),
+    );
+    yield fs.readFile.bind(null, "../ch18.md", (err, data) =>
+      console.log(data),
+    );
+  }
+
+  for (let reader of genFunc()) {
+    reader();
+  }
 });
