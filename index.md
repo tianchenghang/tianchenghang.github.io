@@ -17,18 +17,9 @@
 13. [Set, Map](./ch13.md)
 14. [Proxy](./ch14.md)
 15. [Reflect](./ch15.md)
-16. [Promise](./ch16.md)
+16. [Promise, async/await](./ch16.md)
 17. [Iterator](./ch17.md)
 18. [Generator](./ch18.md)
-19. [异步 Generator](./ch19.md)
-20. [async](./ch20.md)
-21. [class](./ch21.md)
-22. [class 继承](./ch22.md)
-23. [module](./ch23.md)
-24. [module 加载](./ch24.md)
-25. [异步遍历](./ch25.md)
-26. [ArrayBuffer](./ch26.md)
-27. [Decorator](./ch27.md)
 
 ## 其他
 

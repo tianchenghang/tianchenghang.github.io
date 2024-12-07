@@ -87,3 +87,69 @@ test("Test_Generator4", () => {
     reader();
   }
 });
+
+test("Test_Pub_Sub", () => {
+  // type: event type 事件的类型
+  // handler: event handler 事件的回调函数
+  class EventEmitter {
+    constructor() {
+      this.events /* type => handler */ = new Map();
+    }
+
+    // 订阅事件
+    sub(type, handler) {
+      if (!this.events.has(type)) {
+        this.events.set(type, new Set());
+      }
+      this.events.get(type).add(handler);
+    }
+
+    // 取消订阅事件
+    unsub(type, handler) {
+      if (!this.events.has(type)) {
+        return;
+      }
+      if (!handler) {
+        this.events.delete(type);
+      } else {
+        this.events.get(type).delete(handler);
+      }
+    }
+
+    // 发布事件
+    emit(type, ...args) {
+      if (!this.events.has(type)) {
+        return;
+      }
+      for (let handler of this.events.get(type)) {
+        handler.apply(this, args);
+      }
+    }
+
+    // 订阅一次事件
+    sub1(type, handler) {
+      const fn = (...args) => {
+        handler.apply(this, args);
+        this.unsub(type, fn);
+      };
+      this.sub(type, fn);
+    }
+  }
+
+  let evEmitter = new EventEmitter();
+  const handler1 = (...args) => console.log("handler1:", ...args);
+  const handler2 = (...args) => console.log("handler2:", ...args);
+
+  // 订阅事件
+  evEmitter.sub("click", handler1);
+  // 订阅一次事件
+  evEmitter.sub1("click", handler2);
+  // 发布事件
+  evEmitter.emit("click", 1, 2, 3); // handler1: 1 2 3; handler2: 1 2 3
+  // 发布事件
+  evEmitter.emit("click", 4, 5, 6); // handler1: 1 2 3
+  // 取消订阅事件
+  evEmitter.unsub("click", handler1);
+  // 发布事件
+  evEmitter.emit("click", 7, 8, 9);
+});

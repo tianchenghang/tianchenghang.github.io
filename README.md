@@ -57,7 +57,6 @@
 
 - [Iosevka](https://github.com/be5invis/Iosevka)
 - [霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
-- [小赖字体](https://github.com/lxgw/kose-font)
 - [更纱黑体](https://github.com/be5invis/Sarasa-Gothic)
 
 其他阅读
