@@ -153,3 +153,16 @@ test("Test_Pub_Sub", () => {
   // 发布事件
   evEmitter.emit("click", 7, 8, 9);
 });
+
+test("Test_Thunkify", () => {
+  const thunkify = require("./thunkify");
+  function fn(a, b, callback) {
+    let sum = a + b;
+    callback(sum);
+    callback(sum);
+  }
+  let thunk = thunkify(fn);
+  let print /* callback */ = console.log.bind(console);
+  let fnThunk = thunk(1, 2);
+  fnThunk(print); // 3
+});
