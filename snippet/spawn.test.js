@@ -17,17 +17,29 @@ test(
           if (result.done) {
             return resolve(result.value);
           }
+          //! case1
+          // result.value = Promise { PromiseState: "fulfilled", PromiseReturn: 1 }
+          // Promise.resolve(result.value) = result.value
+          //
+          //! case2
+          // result.value = 2
+          // Promise.resolve(result.value) = Promise { PromiseState: "fulfilled", PromiseReturn: 2 }
+          //
+          //! case3
+          // result.value = Promise { PromiseState: "rejected", PromiseReturn: 3 }
+          // Promise.resolve(result.value) = Promise { PromiseState: "rejected", PromiseReturn: 3 }
           Promise.resolve(result.value).then(
             function (value) {
               console.log(value);
               step(function () {
                 return gen.next(value);
               });
-            } /* , function (reason) {
-          step(function () {
-            return gen.throw(reason);
-          });
-        } */,
+            },
+            function (reason) {
+              step(function () {
+                return gen.throw(reason);
+              });
+            },
           );
         }
 
@@ -43,16 +55,10 @@ test(
           resolve(1);
         }, 3000);
       });
-
-      let result2 = yield new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          reject(2);
-        }, 3000);
-      });
-
+      yield 2;
       let result3 = yield new Promise(function (resolve, reject) {
         setTimeout(function () {
-          resolve(3);
+          reject(3);
         }, 3000);
       });
     };
@@ -60,10 +66,10 @@ test(
     try {
       await spawn(genFunc);
     } catch (err) {
-      console.log("spawn", err);
+      console.log("error:", err); // error: 3
     }
   },
   {
-    timeout: 10_000,
+    timeout: 6500,
   },
 );
