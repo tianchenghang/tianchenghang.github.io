@@ -42,16 +42,16 @@ function* genFunc() {
   // 自动执行
   function executor(genFunc) {
     let gen = genFunc();
-    function step(buf) {
+    function $next(buf) {
       let result /* { value: Promise, done: boolean } */ = gen.next(buf);
       if (result.done) {
         return result.value; // Promise
       }
       result.value.then(function (buf /* value */) {
-        step(buf);
+        $next(buf);
       });
     }
-    step();
+    $next();
   }
   executor(genFunc);
 });
@@ -60,8 +60,11 @@ function* genFunc() {
   coco(
     function* () {
       yield* [Promise.resolve(1), Promise.resolve(2)];
-      // Promise { 1 }
-      // Promise { 2 }
+      //? onfufilled: undefined
+      //? $next: Promise { 1 }
+      //? onfufilled: Promise { 1 }
+      //? $next: Promise { 2 }
+      //? onfufilled: Promise { 2 }
     } /* GeneratorFunction */,
   ).catch((reason) => console.log(reason));
 });

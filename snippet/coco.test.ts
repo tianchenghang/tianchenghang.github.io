@@ -41,17 +41,17 @@ test("Test_coco2", () => {
   function executor(genFunc: Function) {
     let gen = genFunc();
 
-    function step(buf?: Buffer) {
+    function $next(buf?: Buffer) {
       let result /* { value: Promise, done: boolean } */ = gen.next(buf);
       if (result.done) {
         return result.value; // Promise
       }
       result.value.then(function (buf: Buffer /* value */) {
-        step(buf);
+        $next(buf);
       });
     }
 
-    step();
+    $next();
   }
 
   executor(genFunc);
@@ -63,8 +63,11 @@ test("Test_coco3", () => {
   coco(
     function* () {
       yield* [Promise.resolve(1), Promise.resolve(2)];
-      // Promise { 1 }
-      // Promise { 2 }
+      //? onfufilled: undefined
+      //? $next: Promise { 1 }
+      //? onfufilled: Promise { 1 }
+      //? $next: Promise { 2 }
+      //? onfufilled: Promise { 2 }
     } /* GeneratorFunction */,
   ).catch((reason: any) => console.log(reason));
 });

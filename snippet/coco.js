@@ -23,34 +23,37 @@ function coco(gen /* Generator | GeneratorFunction */) /* : Promise */ {
     onfulfilled();
 
     function onfulfilled(value) {
-      let result = undefined;
+      console.log("onfufilled:", value);
+      let result;
       try {
-        result /* {value: Promise, done: boolean} */ = gen.next(result);
+        result /* {value: Promise, done: boolean} */ = gen.next(value);
       } catch (e) {
         return reject(e);
       }
-      step(result);
+      $next(result);
     }
 
     function onrejected(reason) {
-      let result = undefined;
+      let result;
       try {
         result = gen.throw(reason);
       } catch (err) {
         return reject(err);
       }
-      step(result);
+      $next(result);
     }
 
-    function step(result /* {value: Promise, done: boolean} */) {
+    function $next(result /* {value: Promise, done: boolean} */) {
       if (result.done) {
         return resolve(result.value);
       }
 
       // result.value instanceof Promise
       if (typeof result.value.then === "function") {
-        console.log("coco:", result.value);
-        return result.value.then(onfulfilled);
+        console.log("$next:", result.value);
+        return result.value.then(() => {
+          onfulfilled(result.value);
+        });
       }
       return reject(new TypeError());
     }
