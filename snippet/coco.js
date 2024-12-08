@@ -27,8 +27,8 @@ function coco(gen /* Generator | GeneratorFunction */) /* : Promise */ {
       let result;
       try {
         result /* {value: Promise, done: boolean} */ = gen.next(value);
-      } catch (e) {
-        return reject(e);
+      } catch (err) {
+        return reject(err);
       }
       $next(result);
     }
@@ -51,9 +51,11 @@ function coco(gen /* Generator | GeneratorFunction */) /* : Promise */ {
       // result.value instanceof Promise
       if (typeof result.value.then === "function") {
         console.log("$next:", result.value);
-        return result.value.then(() => {
-          onfulfilled(result.value);
-        });
+        return result.value.then(
+          /* onfulfilled */ () => {
+            onfulfilled(result.value);
+          },
+        );
       }
       return reject(new TypeError());
     }

@@ -6,7 +6,7 @@ module.exports = thunkify;
 // const newFunc = func.bind(thisVal);
 
 function thunkify(fn) {
-  assert(typeof fn === "function", "function required" /* hint */);
+  assert(typeof fn === "function");
   return function (...args) {
     // const args = Array.from(arguments);
     // const args = Array.prototype.slice.call(arguments);
