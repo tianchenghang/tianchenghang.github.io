@@ -230,25 +230,29 @@ test("Test_Promise_Generator", () => {
 
   let gen = genFunc();
 
-  function go(res /* IteratorYieldResult{ done: boolean, value: Promise } */) {
+  function executor(
+    res /* IteratorYieldResult{ done: boolean, value: Promise } */,
+  ) {
     if (res.done) {
       return res.value;
     }
     return res.value.then(
       function (value) {
         console.log("first:", value);
-        return go(gen.next(value));
+        return executor(gen.next(value));
       } /* onfulfilled */,
       function (reason) {
-        return go(gen.throw(reason));
+        return executor(gen.throw(reason));
       } /* onrejected */,
     );
   }
 
-  go(gen.next() /* IteratorYieldResult{ done: boolean, value: Promise } */);
+  executor(
+    gen.next() /* IteratorYieldResult{ done: boolean, value: Promise } */,
+  );
 });
 
-// TODO 3rd 4th 5th 6th 7th 8th 9th 1st 2nd
+// todo 3rd 4th 5th 6th 7th 8th 9th 1st 2nd
 test("Test_Promise6", () => {
   Promise.resolve().then((value) => console.log("1st")); // 异步
   Promise.resolve().then((value) => (async () => console.log("2nd"))()); // 异步

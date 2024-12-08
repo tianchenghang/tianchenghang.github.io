@@ -6,11 +6,6 @@ type Callback = (err: Error, ...args: any[]) => any;
 type Thunk = (cb: Callback) => any;
 type Thunkify = (fn: (...args: any[]) => any) => (...args: any[]) => Thunk;
 
-interface GeneratorResult {
-  value: Thunk;
-  done: boolean;
-}
-
 test("Test_Thunkify1", () => {
   let readFileThunk: (...args: any[]) => Thunk = thunkify(fs.readFile);
 
@@ -22,12 +17,12 @@ test("Test_Thunkify1", () => {
   }
 
   let gen = genFunc();
-  let ret1: GeneratorResult = gen.next() as GeneratorResult;
+  let ret1: IteratorResult<Thunk> = gen.next() as IteratorResult<Thunk>;
   ret1.value(function (err: Error, data1: Buffer) {
     if (err) {
       throw err;
     }
-    let ret2: GeneratorResult = gen.next(data1) as GeneratorResult;
+    let ret2: IteratorResult<Thunk> = gen.next(data1) as IteratorResult<Thunk>;
     ret2.value(function (err: Error, data2: Buffer) {
       if (err) {
         throw err;
@@ -47,11 +42,11 @@ test("Test_Thunkify2", () => {
     console.log(data2.toString());
   }
 
-  function go(genFunc: any) {
+  function executor(genFunc: any) {
     let gen = genFunc();
 
     function callback(err?: Error, data?: Buffer) {
-      let result = gen.next(data) as GeneratorResult;
+      let result = gen.next(data) as IteratorResult<Thunk>;
       if (result.done) {
         return;
       }
@@ -61,5 +56,5 @@ test("Test_Thunkify2", () => {
     callback();
   }
 
-  go(genFunc);
+  executor(genFunc);
 });
