@@ -4,7 +4,7 @@ import fs from "node:fs";
 
 type Callback = (err: Error, ...args: any[]) => any;
 type Thunk = (cb: Callback) => any;
-type Thunkify = (fn: (...args: any[]) => any) => (...args: any[]) => Thunk;
+// type Thunkify = (fn: (...args: any[]) => any) => (...args: any[]) => Thunk;
 
 test("Test_Thunkify1", () => {
   let readFileThunk: (...args: any[]) => Thunk = thunkify(fs.readFile);
@@ -16,13 +16,14 @@ test("Test_Thunkify1", () => {
     console.log(data2.toString());
   }
 
-  let gen = genFunc();
-  let ret1: IteratorResult<Thunk> = gen.next() as IteratorResult<Thunk>;
+  let gen: Generator<(...args: any[]) => Thunk> /* extends IteratorObject */ =
+    genFunc();
+  let ret1: IteratorResult<Thunk> = gen.next();
   ret1.value(function (err: Error, data1: Buffer) {
     if (err) {
       throw err;
     }
-    let ret2: IteratorResult<Thunk> = gen.next(data1) as IteratorResult<Thunk>;
+    let ret2: IteratorResult<Thunk> = gen.next(data1);
     ret2.value(function (err: Error, data2: Buffer) {
       if (err) {
         throw err;
@@ -33,7 +34,7 @@ test("Test_Thunkify1", () => {
 });
 
 test("Test_Thunkify2", () => {
-  let readFileThunk = thunkify(fs.readFile);
+  let readFileThunk: (...args: any[]) => Thunk = thunkify(fs.readFile);
 
   function* genFunc() {
     let data1: Buffer = yield readFileThunk("./package.json");
@@ -43,10 +44,10 @@ test("Test_Thunkify2", () => {
   }
 
   function executor(genFunc: any) {
-    let gen = genFunc();
+    let gen: Generator<(...args: any[]) => Thunk> = genFunc();
 
     function callback(err?: Error, data?: Buffer) {
-      let result = gen.next(data) as IteratorResult<Thunk>;
+      let result: IteratorResult<Thunk> = gen.next(data);
       if (result.done) {
         return;
       }

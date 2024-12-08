@@ -22,7 +22,7 @@ function* genFunc() {
 
 test("Test_coco1", () => {
   // 手动执行
-  let gen: Generator = genFunc();
+  let gen: Generator<Promise<any>> /* extends IteratorObject */ = genFunc();
   gen
     .next()
     .value /* Promise */
@@ -39,10 +39,10 @@ test("Test_coco1", () => {
 test("Test_coco2", () => {
   // 自动执行
   function executor(genFunc: Function) {
-    let gen = genFunc();
+    let gen: Generator<Promise<any>> = genFunc();
 
     function $next(buf?: Buffer) {
-      let result /* { value: Promise, done: boolean } */ = gen.next(buf);
+      let result: IteratorResult<Promise<any>> = gen.next(buf);
       if (result.done) {
         return result.value; // Promise
       }
