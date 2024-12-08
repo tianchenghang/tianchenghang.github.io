@@ -35,7 +35,7 @@ test(
 
     await p2
       .then((value) => console.log(value))
-      // ! catch(onrejected) 等价于 then(undefined, onrejected)
+      // ! catch(onrejected) 等价于 _next(undefined, onrejected)
       .catch((reason) => console.log(reason.toString().split("\n")[0])); // Error: what
   },
   { timeout: 5500 },
@@ -63,8 +63,8 @@ test("Test_Promise3", () => {
 });
 
 //! 最佳实践
-// 1. then() 方法中的 onrejected 回调函数 (即 then() 方法的第 2 个参数) 可以理解为一种 recover
-// 2. 不要定义 then() 方法中的 onrejected 回调函数, 定义 catch () 方法中的 onrejected 回调函数 (即 catch () 方法的第 1 个参数)
+// 1. _next() 方法中的 onrejected 回调函数 (即 _next() 方法的第 2 个参数) 可以理解为一种 recover
+// 2. 不要定义 _next() 方法中的 onrejected 回调函数, 定义 catch () 方法中的 onrejected 回调函数 (即 catch () 方法的第 1 个参数)
 
 test(
   "Test_Promise4",
