@@ -1,25 +1,20 @@
-import fs from "fs";
-import thunkify from "./snippet/thunkify.js";
-
-let readFileThunk = thunkify(fs.readFile);
-function* genFunc() {
-  let buf1 /* Buffer */ = yield readFileThunk("./package.json");
-  console.log(buf1.toString());
-  let buf2 /* Buffer */ = yield readFileThunk("./README.md");
-  console.log(buf2.toString());
-}
-// 生成器函数的执行器
-function executor(genFunc) {
-  let gen = genFunc();
-
-  function callback(err, buf) {
-    let result /* { value: Thunk, done: boolean } */ = gen.next(buf);
-    if (result.done) {
-      return;
-    }
-    result.value(callback);
-  }
-  callback();
-}
-
-executor(genFunc);
+"use strict";
+// ==UserScript==
+// @name         custom fonts
+// @namespace    https://161043261.github.io/
+// @version      0.0.1
+// @description  custom fonts
+// @author       https://161043261.github.io/
+// @match        https://github.com/*
+// @match        https://161043261.github.io/*
+// @match        https://tianchenghang.github.io/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
+// @grant        none
+// ==/UserScript==
+(function () {
+  "use strict";
+  document.querySelector("style").innerText += `
+    * {
+      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC" !important;
+    }`;
+})();

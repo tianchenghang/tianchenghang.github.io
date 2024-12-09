@@ -1,4 +1,37 @@
 "use strict";
+var __awaiter =
+  (this && this.__awaiter) ||
+  function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P
+        ? value
+        : new P(function (resolve) {
+            resolve(value);
+          });
+    }
+    return new (P || (P = Promise))(function (resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
 var __importDefault =
   (this && this.__importDefault) ||
   function (mod) {
@@ -32,24 +65,26 @@ const node_fs_1 = __importDefault(require("node:fs"));
     });
   });
 });
-(0, vitest_1.test)("Test_Thunkify2", () => {
-  let readFileThunk = (0, thunkify_1.default)(node_fs_1.default.readFile);
-  function* genFunc() {
-    let data1 = yield readFileThunk("./package.json");
-    console.log(data1.toString());
-    let data2 = yield readFileThunk("./README.md");
-    console.log(data2.toString());
-  }
-  function executor(genFunc) {
-    let gen = genFunc();
-    function callback(err, data) {
-      let result = gen.next(data);
-      if (result.done) {
-        return;
-      }
-      result.value(callback);
+(0, vitest_1.test)("Test_Thunkify2", () =>
+  __awaiter(void 0, void 0, void 0, function* () {
+    let readFileThunk = (0, thunkify_1.default)(node_fs_1.default.readFile);
+    function* genFunc() {
+      let data1 = yield readFileThunk("./package.json");
+      console.log(data1.toString());
+      let data2 = yield readFileThunk("./README.md");
+      console.log(data2.toString());
     }
-    callback();
-  }
-  executor(genFunc);
-});
+    function executor(genFunc) {
+      let gen = genFunc();
+      function callback(err, data) {
+        let result = gen.next(data);
+        if (result.done) {
+          return;
+        }
+        result.value(callback);
+      }
+      callback();
+    }
+    yield executor(genFunc);
+  }),
+);
