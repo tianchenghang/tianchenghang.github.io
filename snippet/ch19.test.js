@@ -12,6 +12,7 @@ test("Test_class1", () => {
   //! User.prototype = user.__proto__
   class User {
     constructor(name) {
+      // 隐式 User.prototype.constructor()
       this.name = name;
       this.printName = function () {
         console.log(this.name);
@@ -19,6 +20,7 @@ test("Test_class1", () => {
     }
 
     toString() {
+      // 隐式 User.prototype.toString()
       return `User{ ${this.name} }`;
     }
 
@@ -74,6 +76,9 @@ test("Test_class1", () => {
   console.log("\n7. 类的所有实例共享同一个原型对象");
   let user2 = new User();
   console.log(user.__proto__ === user2.__proto__); // true
+
+  console.log(User.hasOwnProperty("constructor")); // false
+  console.log(User.prototype.hasOwnProperty("constructor")); // true
 });
 
 test("Test_class2", () => {
@@ -105,7 +110,53 @@ test("Test_class2", () => {
   //   enumerable: false,
   //   configurable: true
   // }
-  // User.prototype 原型对象 的 name 属性的 getter 和 setter, 定义在 name 属性的属性描述对象上
+  // User.prototype 原型对象 的 name 属性的 get 方法 和 set 方法, 定义在 name 属性的属性描述对象上
   console.log(propDescriptor.hasOwnProperty("get")); // true
   console.log(propDescriptor.hasOwnProperty("set")); // true
+});
+
+test("Test_class3", () => {
+  class Parent {
+    constructor() {
+      // 隐式 Parent.prototype.constructor()
+      console.log("parent constructor");
+    }
+
+    static staticMethod() {
+      // 隐式 Parent.staticMethod()
+      console.log("parent static method");
+    }
+
+    instanceMethod() {
+      // 隐式 Parent.prototype.instanceMethod()
+      console.log("parent instance method");
+    }
+  }
+
+  class Child extends Parent {
+    constructor() {
+      //! super 可以在子类的构造函数中调用超类的构造函数 super()
+      super();
+      //! super 可以在子类的构造方法中调用超类的实例方法 super.instanceMethod(), super = Parent.prototype
+      super.instanceMethod();
+    }
+
+    childInstanceMethod() {
+      //! super 可以在子类的实例方法中调用超类的实例方法 super.instanceMethod(), super = Parent.prototype
+      super.instanceMethod();
+    }
+
+    static childStaticMethod() {
+      //! super 可以在子类的静态方法中调用超类的静态方法 super.staticMethod(), super = Parent
+      super.staticMethod();
+    }
+  }
+
+  // parent static method
+  Child.childStaticMethod();
+  // parent constructor
+  // parent instance method
+  let child = new Child();
+  // parent instance method
+  child.childInstanceMethod();
 });
