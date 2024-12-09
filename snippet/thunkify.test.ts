@@ -33,7 +33,7 @@ test("Test_Thunkify1", () => {
   });
 });
 
-test("Test_Thunkify2", () => {
+test("Test_Thunkify2", async () => {
   let readFileThunk: (...args: any[]) => Thunk = thunkify(fs.readFile);
 
   function* genFunc() {
@@ -57,5 +57,5 @@ test("Test_Thunkify2", () => {
     callback();
   }
 
-  executor(genFunc);
+  await executor(genFunc);
 });

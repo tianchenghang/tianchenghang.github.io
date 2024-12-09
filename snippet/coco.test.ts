@@ -1,5 +1,5 @@
 import { test } from "vitest";
-
+import coco from "./coco";
 import fs from "fs";
 
 const _readFile = function (fileName: string) {
@@ -16,14 +16,14 @@ const _readFile = function (fileName: string) {
 function* genFunc() {
   let buf1: Buffer = yield _readFile("./package.json");
   let buf2: Buffer = yield _readFile("./README.md");
-  console.log(buf1.toString().length);
-  console.log(buf2.toString().length);
+  console.log(buf1.toString());
+  console.log(buf2.toString());
 }
 
-test("Test_coco1", () => {
+test("Test_coco1", async () => {
   // 手动执行
   let gen: Generator<Promise<any>> /* extends IteratorObject */ = genFunc();
-  gen
+  await gen
     .next()
     .value /* Promise */
     .then(function (buf1: Buffer /* value */) {
@@ -36,7 +36,7 @@ test("Test_coco1", () => {
     });
 });
 
-test("Test_coco2", () => {
+test("Test_coco2", async () => {
   // 自动执行
   function executor(genFunc: Function) {
     let gen: Generator<Promise<any>> = genFunc();
@@ -53,13 +53,10 @@ test("Test_coco2", () => {
 
     $next();
   }
-
-  executor(genFunc);
+  await executor(genFunc);
 });
 
 test("Test_coco3", () => {
-  const coco = require("./coco");
-
   coco(
     function* () {
       yield* [Promise.resolve(1), Promise.resolve(2)];

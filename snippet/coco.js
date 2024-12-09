@@ -1,13 +1,13 @@
-module.exports = coco;
-
-// func.call(thisVal, ...args);
-// func.apply(thisVal, args[]);
-// const newFunc = func.bind(thisVal);
-
 /**
- * https://github.com/tj/co/blob/master/index.js
+ * func.call(thisVal, ...args);
+ * func.apply(thisVal, args[]);
+ * const newFunc = func.bind(thisVal);
+ *
+ * @link https://github.com/tj/co/blob/master/index.js
  */
-function coco(gen /* Generator | GeneratorFunction */) /* : Promise */ {
+export default function coco(
+  gen /* Generator | GeneratorFunction */,
+) /* : Promise */ {
   let ctx = this;
   return new Promise(function (resolve, reject) {
     // gen instanceof GeneratorFunction
@@ -51,11 +51,9 @@ function coco(gen /* Generator | GeneratorFunction */) /* : Promise */ {
       // result.value instanceof Promise
       if (typeof result.value.then === "function") {
         console.log("$next:", result.value);
-        return result.value.then(
-          /* onfulfilled */ () => {
-            onfulfilled(result.value);
-          },
-        );
+        return result.value.then(() => {
+          onfulfilled(result.value);
+        });
       }
       return reject(new TypeError());
     }

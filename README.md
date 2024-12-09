@@ -48,7 +48,7 @@
   "use strict";
   document.querySelector("style").innerText += `
     * {
-      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC", "Xiaolai Mono SC" !important;
+      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC" !important;
     }`;
 })();
 ```

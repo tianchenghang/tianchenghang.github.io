@@ -1,11 +1,10 @@
-const assert = require("assert");
-module.exports = thunkify;
+import assert from "assert";
 
 // func.call(thisVal, ...args);
 // func.apply(thisVal, args[]);
 // const newFunc = func.bind(thisVal);
 
-function thunkify(fn) {
+export default function thunkify(fn) {
   assert(typeof fn === "function");
   return function (...args) {
     // const args = Array.from(arguments);
