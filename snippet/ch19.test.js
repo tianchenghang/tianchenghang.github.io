@@ -287,3 +287,28 @@ test("Test_class9", () => {
   }
   console.log(new Foobar("foobar")); // Foobar { name: 'foobar' }
 });
+
+// 静态属性的继承是浅拷贝
+test("Test_class10", () => {
+  class Parent {
+    static foo = { val: 1 };
+    static greet() {
+      console.log("parent");
+    }
+  }
+  class Child extends Parent {
+    constructor() {
+      super();
+      Child.foo.val++; // 静态属性的继承是浅拷贝
+      Child.greet(); // parent
+      Child.greet = function () {
+        console.log("child");
+      };
+    }
+  }
+  new Child();
+  console.log(Parent.foo); // { val: 2 }
+  console.log(Child.foo); // { val: 2 }
+  Parent.greet(); // parent
+  Child.greet(); // child
+});
