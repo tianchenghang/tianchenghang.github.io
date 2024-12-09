@@ -160,3 +160,130 @@ test("Test_class3", () => {
   // parent instance method
   child.childInstanceMethod();
 });
+
+test("Test_class4", () => {
+  class Iter {
+    constructor(...args) {
+      this.elems = args;
+    }
+
+    *[Symbol.iterator]() {
+      // 隐式 Iter.prototype[Symbol.iterator] = function* ()
+      for (let item of this.elems) {
+        yield item;
+      }
+    }
+  }
+
+  let iter = new Iter(1, 2, 3);
+  console.log(Reflect.ownKeys(iter)); // [ 'elems' ]
+  console.log(Reflect.ownKeys(iter.__proto__)); // [ 'constructor', Symbol(Symbol.iterator) ]
+  for (let x of iter) {
+    console.log(x); // 1 2 3
+  }
+});
+
+test("Test_class5", () => {
+  class Foo {
+    printName(name = "bar") {
+      this.print(`name: ${name}`);
+    }
+
+    print(str) {
+      console.log(str);
+    }
+  }
+
+  let foo = new Foo();
+  let { printName } = foo;
+  try {
+    printName();
+  } catch (err) {
+    console.log(err); // TypeError: Cannot read properties of undefined (reading 'print')
+  }
+});
+
+test("Test_class6", () => {
+  class Foo {
+    constructor() {
+      this.printName = this.printName.bind(this);
+    }
+
+    printName(name = "bar") {
+      this.print(`name: ${name}`);
+    }
+
+    print(str) {
+      console.log(str);
+    }
+  }
+
+  let foo = new Foo();
+  let { printName } = foo;
+  printName(); // name: bar
+});
+
+test("Test_class7", () => {
+  function Foo(name) {
+    if (new.target !== undefined) {
+      console.log(new.target);
+      this.name = name;
+    } else {
+      throw new Error("Use `new`");
+    }
+  }
+  // [Function Foo]
+  console.log(new Foo("foo")); // Foo { name: 'foo' }
+
+  function Bar(name) {
+    if (new.target !== Bar) {
+      throw new Error("Use `new`");
+    }
+    console.log(new.target);
+    this.name = name;
+  }
+  // [Function Bar]
+  console.log(Reflect.construct(Bar, ["bar"])); // Bar { name: 'bar' }
+});
+
+test("Test_class8", () => {
+  class Foo {
+    constructor(name) {
+      if (new.target !== undefined) {
+        console.log(new.target);
+        this.name = name;
+      } else {
+        throw new Error("Use `new`");
+      }
+    }
+  }
+  // [class Foo]
+  console.log(new Foo("foo")); // Foo { name: 'foo' }
+  class Foobar extends Foo {
+    // constructor(name) { super(name); }
+  }
+  // [class Foobar extends Foo]
+  console.log(Reflect.construct(Foobar, ["foobar"])); // Foobar { name: 'foobar' }
+});
+
+test("Test_class9", () => {
+  class Foo {
+    constructor(name) {
+      this.name = name;
+      if (new.target === Foo) {
+        throw "Foo is virtual";
+      }
+    }
+  }
+  class Foobar extends Foo {
+    constructor(name) {
+      super(name);
+    }
+  }
+  try {
+    new Foo();
+  } catch (e) {
+    console.log(e); // Foo is virtual
+  }
+  console.log(new Foobar("foobar")); // Foobar { name: 'foobar' }
+});

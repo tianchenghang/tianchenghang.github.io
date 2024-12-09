@@ -1,4 +1,6 @@
 import { test } from "vitest";
+import fs from "fs";
+import thunkify from "./thunkify";
 
 test("Test_Generator1", () => {
   let obj = { foo: 1, bar: 2 };
@@ -69,8 +71,6 @@ test("Test_new", () => {
 });
 
 test("Test_Generator4", () => {
-  const fs = require("fs");
-
   function* genFunc() {
     yield fs.readFile.bind(null, "../package.json", (err, data) =>
       console.log(data),
@@ -155,8 +155,6 @@ test("Test_Pub_Sub", () => {
 });
 
 test("Test_Thunkify1", () => {
-  const thunkify = require("./thunkify");
-
   function fn(a, b, callback) {
     let sum = a + b;
     callback(sum);
@@ -170,8 +168,6 @@ test("Test_Thunkify1", () => {
 });
 
 test("Test_Thunkify2", () => {
-  const fs = require("fs");
-  const thunkify = require("./thunkify");
   let readFileThunk = thunkify(fs.readFile);
   let genFunc = function* () {
     let data1 = yield readFileThunk("./package.json");
