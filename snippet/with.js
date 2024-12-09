@@ -9,7 +9,7 @@ let foo = function () {
   return 2;
 };
 with (Foo.prototype) {
-  console.log(foo() /* 等价于 Bar.prototype.foo() */); // 1
+  console.log(foo() /* 等价于 Foo.prototype.foo() */); // 1
   console.log(Foo.prototype.foo()); // 1
 }
 

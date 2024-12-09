@@ -145,13 +145,13 @@ test("Test_Symbol.toPrimitive", () => {
 
 test("Test_Symbol.toStringTag", () => {
   // 属性
-  console.log({ [Symbol.toStringTag]: "Foo" }.toString()); // [object Bar]
+  console.log({ [Symbol.toStringTag]: "Foo" }.toString()); // [object Foo]
   // getter
   class Bar {
     get [Symbol.toStringTag]() {
       return "Bar";
     }
   }
-  console.log(new Bar().toString()); // [object Bar]
-  console.log(Object.prototype.toString.call(new Bar())); // [object Bar]
+  console.log(new Bar().toString()); // [object Foo]
+  console.log(Object.prototype.toString.call(new Bar())); // [object Foo]
 });

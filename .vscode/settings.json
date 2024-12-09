@@ -1,4 +1,5 @@
 {
   "editor.fontFamily": "JS, Iosevka SS06, LXGW WenKai",
-  "catppuccin.italicKeywords": true
+  "catppuccin.italicKeywords": true,
+  "catppuccin.italicComments": true
 }

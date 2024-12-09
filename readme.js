@@ -1,20 +1,40 @@
-"use strict";
-// ==UserScript==
-// @name         custom fonts
-// @namespace    https://161043261.github.io/
-// @version      0.0.1
-// @description  custom fonts
-// @author       https://161043261.github.io/
-// @match        https://github.com/*
-// @match        https://161043261.github.io/*
-// @match        https://tianchenghang.github.io/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
-// @grant        none
-// ==/UserScript==
-(function () {
-  "use strict";
-  document.querySelector("style").innerText += `
-    * {
-      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC" !important;
-    }`;
-})();
+class Foo {
+  #_privateField = "private field";
+  static #_staticPrivateField = "static private field";
+
+  get #privateField() {
+    console.log("getter");
+    return this.#_privateField;
+  }
+
+  static get #staticPrivateField() {
+    console.log("getter");
+    return this.#_staticPrivateField;
+  }
+
+  #privateMethod() {
+    console.log(this.#privateField);
+  }
+
+  static #staticPrivateMethod() {
+    console.log(this.#staticPrivateField);
+  }
+
+  publicPrint() {
+    this.#privateMethod(); // this === foo
+    console.log(this.#_privateField);
+  }
+
+  static staticPublicPrint() {
+    this.#staticPrivateMethod(); // this === Foo
+    console.log(this.#_staticPrivateField);
+  }
+}
+
+// getter, static private field
+// static private field
+Foo.staticPublicPrint();
+let foo = new Foo();
+// getter, private field
+// private field
+foo.publicPrint();
