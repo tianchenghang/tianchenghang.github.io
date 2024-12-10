@@ -384,13 +384,98 @@ test("Test_class14", () => {
 
   class Child extends Parent {
     constructor() {
-      super(); // this.foo = 1;
+      super(); // 调用父类的构造方法以初始化 this
+      console.log(this.foo); // 1
+
       this.foo = 2;
-      super.foo = 3; // 等价于 this.foo = 3;
-      console.log(super.foo); // 等价于 console.log(Parent.prototype.foo);
+      console.log(this.foo); // 2
+
+      console.log(super.valueOf()); // Child { foo: 2 }
+
+      super.foo = 3;
+      //! 等价于
+      //* super.valueOf().foo = 3;
+      //* this.foo = 3;
       console.log(this.foo); // 3
+      console.log(super.foo); // undefined; 等价于 console.log(Parent.prototype.foo);
+
+      super.valueOf().foo = 4;
+      console.log(this.foo); // 4
+      console.log(super.foo); // undefined; 等价于 console.log(Parent.prototype.foo);
+
+      Parent.prototype.foo = 5;
+      console.log(this.foo); // 4
+      console.log(super.foo); // 5
+
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+      console.log();
+    }
+
+    instanceMethod() {
+      console.log(super.valueOf()); // Child { foo: 4 }
+      super.bar = 6;
+      //! 等价于
+      //* super.valueOf().bar = 5;
+      //* this.bar = 5;
+      //* child.bar = 5
+
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+      console.log();
+    }
+
+    // 最先执行
+    static {
+      console.log(super.valueOf()); // [class Child extends Parent]
+      super.foobar = 7;
+      //! 等价于
+      //* super.valueOf().foobar = 7;
+      //* this.foobar = 7;
+      //* Child.foobar = 7
+
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+      console.log();
+    }
+
+    static staticMethod() {
+      console.log(super.valueOf()); // [class Child extends Parent] { foobar: 7 }
+      super.valueOf().baz = 8;
+      //! 等价于 super.baz = 8;
+      //* this.baz = 8;
+      //* Child.baz = 8;
+
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+      console.log();
     }
   }
 
   let child = new Child();
+  child.instanceMethod();
+  Child.staticMethod();
+  console.log(child.foo, child.bar); // 4 6
+  console.log(Child.foobar, Child.baz); // 7 8
+});
+
+test("Test_class15", () => {
+  let obj = {
+    print() {
+      console.log(super.valueOf()); // { print: [Function: print] }
+      console.log(this === this.valueOf()); // true
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+    },
+  };
+  obj.print();
+
+  class Klass {
+    static {
+      console.log(super.valueOf()); // [class Klass]
+      console.log(this === this.valueOf()); // true
+      console.log(this === super.valueOf()); // true
+      console.log(this.valueOf() === super.valueOf()); // true
+    }
+  }
 });

@@ -1,29 +1,26 @@
-class Bar {
-  #brand;
-
-  static staticIsBar(obj) {
-    try {
-      console.log(obj.#brand);
-      return true;
-    } catch (err) {
-      console.log(err); // TypeError: Cannot read private member #brand
-      return false;
-    }
-  }
-
-  isBar() {
-    try {
-      console.log(this.#brand);
-      return true;
-    } catch (err) {
-      console.log(err); // TypeError: Cannot read private member #brand
-      return false;
-    }
-  }
-}
-
-console.log(Bar.staticIsBar(new Bar())); // true
-console.log(Bar.staticIsBar({})); // false
-let bar = new Bar();
-console.log(bar.isBar()); // true
-console.log(bar.isBar.apply({})); // false
+"use strict";
+// pnpm install --save-dev @babel/core @babel/cli @babel/preset-env
+// touch .babelrc
+// {
+//   "presets": ["@babel/preset-env"],
+//     "plugins": []
+// }
+// ==UserScript==
+// @name         custom fonts
+// @namespace    https://161043261.github.io/
+// @version      0.0.1
+// @description  custom fonts
+// @author       https://161043261.github.io/
+// @match        https://github.com/*
+// @match        https://161043261.github.io/*
+// @match        https://tianchenghang.github.io/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
+// @grant        none
+// ==/UserScript==
+(function () {
+  "use strict";
+  document.querySelector("style").innerText += `
+    * {
+      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC" !important;
+    }`;
+})();

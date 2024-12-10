@@ -1,3 +1,12 @@
+// pnpm install --save-dev @babel/core @babel/cli @babel/preset-env
+
+// touch .babelrc
+
+// {
+//   "presets": ["@babel/preset-env"],
+//     "plugins": []
+// }
+
 // ==UserScript==
 // @name         custom fonts
 // @namespace    https://161043261.github.io/
