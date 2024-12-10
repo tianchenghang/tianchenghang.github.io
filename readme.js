@@ -1,40 +1,29 @@
-class Foo {
-  #_privateField = "private field";
-  static #_staticPrivateField = "static private field";
+class Bar {
+  #brand;
 
-  get #privateField() {
-    console.log("getter");
-    return this.#_privateField;
+  static staticIsBar(obj) {
+    try {
+      console.log(obj.#brand);
+      return true;
+    } catch (err) {
+      console.log(err); // TypeError: Cannot read private member #brand
+      return false;
+    }
   }
 
-  static get #staticPrivateField() {
-    console.log("getter");
-    return this.#_staticPrivateField;
-  }
-
-  #privateMethod() {
-    console.log(this.#privateField);
-  }
-
-  static #staticPrivateMethod() {
-    console.log(this.#staticPrivateField);
-  }
-
-  publicPrint() {
-    this.#privateMethod(); // this === foo
-    console.log(this.#_privateField);
-  }
-
-  static staticPublicPrint() {
-    this.#staticPrivateMethod(); // this === Foo
-    console.log(this.#_staticPrivateField);
+  isBar() {
+    try {
+      console.log(this.#brand);
+      return true;
+    } catch (err) {
+      console.log(err); // TypeError: Cannot read private member #brand
+      return false;
+    }
   }
 }
 
-// getter, static private field
-// static private field
-Foo.staticPublicPrint();
-let foo = new Foo();
-// getter, private field
-// private field
-foo.publicPrint();
+console.log(Bar.staticIsBar(new Bar())); // true
+console.log(Bar.staticIsBar({})); // false
+let bar = new Bar();
+console.log(bar.isBar()); // true
+console.log(bar.isBar.apply({})); // false

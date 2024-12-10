@@ -110,28 +110,40 @@ test("Test_class2", () => {
 });
 
 test("Test_class3", () => {
-  class Iter {
+  class Iter /* implements Iterable */ {
     constructor(...args) {
-      this.elems = args;
+      this.items = args;
     }
 
     *[Symbol.iterator]() {
       // 隐式 Iter.prototype[Symbol.iterator] = function* ()
-      for (let item of this.elems) {
+      for (let item of this.items) {
         yield item;
       }
     }
   }
 
-  let iter = new Iter(1, 2, 3);
-  console.log(Reflect.ownKeys(iter)); // [ 'elems' ]
+  let iter /* implements Iterable */ = new Iter(1, 2, 3);
+  // iter = {
+  //   items: [1, 2, 3],
+  //   __proto__: {
+  //     constructor() {},
+  //     [Symbol.iterator]: function* () {
+  //       for (let item of this.items) {
+  //         yield item;
+  //       }
+  //     },
+  //   },
+  // };
+  let gen = iter[Symbol.iterator]();
+  console.log(Reflect.ownKeys(iter)); // [ 'items' ]
   console.log(Reflect.ownKeys(iter.__proto__)); // [ 'constructor', Symbol(Symbol.iterator) ]
-  for (let x of iter) {
-    console.log(x); // 1 2 3
+  for (let item of iter) {
+    console.log(item); // 1 2 3
   }
 });
 
-test("Test_class5", () => {
+test("Test_class4", () => {
   class Foo {
     printName(name = "bar") {
       this.print(`name: ${name}`);
@@ -151,14 +163,14 @@ test("Test_class5", () => {
   }
 });
 
-test("Test_class6", () => {
+test("Test_class5", () => {
   class Foo {
     constructor() {
       this.printName = this.printName.bind(this);
     }
 
     printName(name = "bar") {
-      this.print(`name: ${name}`);
+      this.print(`name: ${name}`); // name: bar
     }
 
     print(str) {
@@ -171,7 +183,7 @@ test("Test_class6", () => {
   printName(); // name: bar
 });
 
-test("Test_class7", () => {
+test("Test_class6", () => {
   function Foo(name) {
     if (new.target !== undefined) {
       console.log(new.target);
@@ -192,54 +204,67 @@ test("Test_class7", () => {
     this.name = name;
   }
 
-  // [Function Foo]
-  console.log(Reflect.construct(Bar, ["bar"])); // Foo { name: 'bar' }
+  // [Function Bar]
+  console.log(Reflect.construct(Bar, ["bar"])); // Bar { name: 'bar' }
+});
+
+test("Test_class7", () => {
+  class Parent {
+    constructor() {
+      console.log(new.target);
+    }
+  }
+
+  class Child extends Parent {
+    // 隐式自动生成
+    // constructor(...args) {
+    //   super(...args);
+    // }
+  }
+
+  new Child(); // [class Child extends Parent]
+  Reflect.construct(Child, [] /* argArr */); // [class Child extends Parent]
 });
 
 test("Test_class8", () => {
-  class Foo {
-    constructor(name) {
-      if (new.target !== undefined) {
-        console.log(new.target);
-        this.name = name;
-      } else {
-        throw new Error("Use `new`");
-      }
-    }
-  }
-
-  // [class Foo]
-  console.log(new Foo("foo")); // Foo { name: 'foo' }
-  class Foobar extends Foo {
-    // constructor(name) { super(name); }
-  }
-
-  // [class Foobar extends Foo]
-  console.log(Reflect.construct(Foobar, ["foobar"])); // Foobar { name: 'foobar' }
-});
-
-test("Test_class9", () => {
-  class Foo {
+  class Virtual {
     constructor(name) {
       this.name = name;
-      if (new.target === Foo) {
-        throw "Foo is virtual";
+      if (new.target === Virtual) {
+        throw "virtual";
       }
     }
   }
 
-  class Foobar extends Foo {
-    constructor(name) {
-      super(name);
+  class Impl extends Virtual {}
+
+  try {
+    new Virtual();
+  } catch (e) {
+    console.log(e); // virtual
+  }
+  console.log(new Impl("foo")); // Impl { name: 'foo' }
+});
+
+// 子类访问父类的私有属性
+test("Test_class9", () => {
+  class Parent {
+    #foo = 1;
+
+    getFoo() {
+      console.log(this); // Child {}
+      return this.#foo;
     }
   }
 
-  try {
-    new Foo();
-  } catch (e) {
-    console.log(e); // Foo is virtual
+  class Child extends Parent {
+    constructor() {
+      super(); // 调用 super(), 即调用父类的构造方法以初始化 this
+      console.log(this.getFoo()); // 1
+    }
   }
-  console.log(new Foobar("foobar")); // Foobar { name: 'foobar' }
+
+  new Child();
 });
 
 // 静态属性的继承是浅拷贝
@@ -251,6 +276,7 @@ test("Test_class10", () => {
   class Child extends Parent {
     constructor() {
       super();
+      // 等价于 Parent.prototype.constructor.call(this);
       Child.foo.val++; // 静态属性的继承是浅拷贝
     }
   }
@@ -262,12 +288,14 @@ test("Test_class10", () => {
 
 test("Test_class11", () => {
   class Parent {
-    name = "parent";
+    name = "mom";
 
     constructor() {
-      console.log(`name: ${this.name}`); // name: parent
+      console.log(`name: ${this.name}`);
     }
   }
+
+  Parent.prototype.name = "dad";
 
   class Child extends Parent {
     // 隐式生成
@@ -275,40 +303,94 @@ test("Test_class11", () => {
     //   super(...args);
     // }
     name = "child";
+
+    printParentName() {
+      console.log("name:", super.name); // super = Parent.prototype
+    }
   }
 
-  new Child();
+  let child = new Child(); // name: mom
+  child.printParentName(); // name: dad
 });
 
 test("Test_class12", () => {
   class Parent {
     constructor() {
-      this.foo = 200;
+      console.log(this);
+      this.printThis();
     }
 
-    retFoo() {
-      return this.foo;
+    printThis() {
+      console.log(this);
+    }
+
+    static staticPrintThis() {
+      console.log(this);
     }
   }
 
-  Parent.prototype.bar = 404;
-  Parent.baz = 502;
+  class Child extends Parent {
+    // @override
+    printThis() {
+      super.printThis();
+    }
+
+    // @override
+    static staticPrintThis() {
+      super.staticPrintThis();
+    }
+  }
+
+  Child.staticPrintThis(); // [class Child extends Parent] Child{}
+  let child = new Child(); // Child{}
+  child.printThis(); // Child{}
+});
+
+test("Test_class13", () => {
+  class Parent {
+    constructor() {
+      this.foo = 1;
+    }
+
+    printFoo() {
+      console.log(this.foo);
+    }
+  }
 
   class Child extends Parent {
     constructor() {
       super();
-      // super === Parent.prototype
-      console.log(super.retFoo()); // 200
-      console.log(super.foo); // undefined
-      console.log(super.bar); // 404
+      this.foo = 2; // this.__proto__.foo = 2;
     }
 
-    static print() {
-      // super === Parent
-      console.log(super.baz); // 502
+    // @override
+    printFoo() {
+      super.printFoo();
+      // 等价于
+      super.printFoo.call(this);
     }
   }
 
-  new Child();
-  Child.print();
+  let child = new Child();
+  child.printFoo(); // 2 2
+});
+
+test("Test_class14", () => {
+  class Parent {
+    constructor() {
+      this.foo = 1; // 使用 super 调用父类实例方法时, 父类方法中的 this 指向子类实例
+    }
+  }
+
+  class Child extends Parent {
+    constructor() {
+      super(); // this.foo = 1;
+      this.foo = 2;
+      super.foo = 3; // 等价于 this.foo = 3;
+      console.log(super.foo); // 等价于 console.log(Parent.prototype.foo);
+      console.log(this.foo); // 3
+    }
+  }
+
+  let child = new Child();
 });
