@@ -21,8 +21,7 @@
 - [ch17 Iterator](./ch17.md)
 - [ch18 Generator](./ch18.md)
 - [ch19 class](./ch19.md)
-- [ch20 module](./ch20.md)
-- [ch21 decorator](./ch21.md)
+- [ch20 decorator](./ch20.md)
 
 ## 其他
 
