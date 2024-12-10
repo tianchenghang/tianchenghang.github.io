@@ -21,7 +21,7 @@
 - [ch17 Iterator](./ch17.md)
 - [ch18 Generator](./ch18.md)
 - [ch19 class](./ch19.md)
-- [ch20 decorator](./ch20.md)
+- [ch20 模块](./ch20.md)
 
 ## 其他
 
