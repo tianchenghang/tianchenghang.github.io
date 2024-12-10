@@ -1,5 +1,4 @@
-// import 语句会提升到模块的顶部
-// 先执行 import 语句, 再执行代码
+// import 语句会提升到模块的顶部, 先执行 import 语句, 再执行代码
 import "./example1.js";
 import "./example2.js";
 // anyName: 导入 default 默认导出时可以指定任意的变量名
@@ -20,20 +19,18 @@ console.log(anyName); // { a: 1, b: 2, c: 3 }
 console.log(foo, bar, baz, fn()); // 1 2 3 cheese
 
 console.log(token); // alive
-
-// ES6 导入导出的值动态绑定
-// CommonJS 导入缓存的值, 没有动态绑定
+// commonjs 模块输出的是值拷贝 (缓存的值), 不能动态绑定
+// es6 模块输出的是值引用, 可以动态绑定
 setTimeout(() => {
   console.log(token); // expired
 }, 3000);
 
-// 导入的变量是只读的
+// 导入的变量是只读变量
 try {
-  anyName = null; // 不能对只读变量赋值
+  anyName = "try to take over the world!";
 } catch (e) {
   console.log(e); // TypeError: Assignment to constant variable
 }
-anyName.a = 1; // 不推荐!
 console.log(example1);
 
 // [Module: null prototype] {
@@ -48,3 +45,7 @@ console.log(example1);
 
 // export 和 import 的复合写法
 export { foo, bar, baz as foobar } from "./example1.js";
+// 等价于
+// import { foo, bar, baz } from "./example1.js";
+// export { foo, bar, baz as foobar }
+console.log(import.meta);

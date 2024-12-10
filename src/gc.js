@@ -1,4 +1,4 @@
-// node --expose-gc ./snippet/gc.js # 允许手动垃圾回收
+// node --expose-gc ./src/gc.js # 允许手动垃圾回收
 
 global.gc(); // 手动垃圾回收
 console.log("1.", process.memoryUsage().heapUsed); // 查看堆内存占用

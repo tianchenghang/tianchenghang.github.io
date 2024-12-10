@@ -12,7 +12,7 @@ export function fn() {
 
 let anyName = { a, b, c };
 
-// export default 1;
+// default 默认导出
 export default anyName;
 // 等价于
 // export { anyName as default };
@@ -21,8 +21,8 @@ export default anyName;
 export { a as foo, b as bar, c as baz, fn as func };
 
 export let token = "alive";
-// ES6 导入导出的值动态绑定
-// CommonJS 导入缓存的值, 没有动态绑定
+// commonjs 模块输出的是值拷贝 (缓存的值), 不能动态绑定
+// es6 模块输出的是值引用, 可以动态绑定
 setTimeout(() => {
   token = "expired";
 }, 3000);
