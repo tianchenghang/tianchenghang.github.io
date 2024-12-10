@@ -479,3 +479,53 @@ test("Test_class15", () => {
     }
   }
 });
+
+// todo
+test("Test_Mixin", () => {
+  function mix(...Mixins) {
+    class Mix {
+      constructor() {
+        for (let Mixin of Mixins) {
+          copyProps(this, new Mixin()); // 拷贝实例属性
+        }
+      }
+    }
+    for (let Mixin of Mixins) {
+      copyProps(Mix, Mixin); // 拷贝静态属性, 静态方法
+      copyProps(Mix.prototype, Mixin.prototype); // 拷贝实例方法
+    }
+    return Mix;
+  }
+
+  function copyProps(target, src) {
+    for (let propKey of Reflect.ownKeys(src)) {
+      if (
+        propKey !== "constructor" &&
+        propKey !== "prototype" &&
+        propKey !== "name"
+      ) {
+        let propDesc = Object.getOwnPropertyDescriptor(src, propKey);
+        Object.defineProperty(target, propKey, propDesc);
+      }
+    }
+  }
+
+  class Dad {
+    static dad = "dad";
+    static printDad() {
+      console.log("dad");
+    }
+  }
+  class Mom {
+    mom = "mom";
+    printMom() {
+      console.log("mom");
+    }
+  }
+  class Child extends mix(Dad, Mom) {}
+  console.log(Child.dad); // dad
+  Child.printDad(); // dad
+  let child = new Child();
+  console.log(child.mom); // mom
+  child.printMom(); // mom
+});
