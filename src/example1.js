@@ -12,7 +12,7 @@ export function fn() {
 
 let anyName = { a, b, c };
 
-// default 默认导出
+// default 默认导出 `export default someValue`
 export default anyName;
 // 等价于
 // export { anyName as default };

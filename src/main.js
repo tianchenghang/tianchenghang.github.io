@@ -1,4 +1,5 @@
-// import 语句会提升到模块的顶部, 先执行 import 语句, 再执行代码
+// import 语句会提升到模块的顶层
+//! import 语句编译时执行
 import "./example1.js";
 import "./example2.js";
 // anyName: 导入 default 默认导出时可以指定任意的变量名
@@ -10,6 +11,7 @@ import "./example2.js";
 import anyName, * as example1 from "./example1.js";
 import { bar, baz, foo, func as fn, token } from "./example1.js";
 
+//! es6 代码运行时执行
 // Import example1 begins
 // Importing example2
 // Import example1 ends
@@ -27,7 +29,7 @@ setTimeout(() => {
 
 // 导入的变量是只读变量
 try {
-  anyName = "try to take over the world!";
+  anyName = "newVal";
 } catch (e) {
   console.log(e); // TypeError: Assignment to constant variable
 }
