@@ -45,7 +45,7 @@
   "use strict";
   document.querySelector("style").innerText += `
     * {
-      font-family: "JS", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC", "Xiaolai Mono SC" !important;
+      font-family: "Harmony", "Iosevka SS06", "LXGW WenKai Mono", "Sarasa Mono SC" !important;
     }`;
 })();
 ```
@@ -54,7 +54,6 @@
 
 - [Iosevka](https://github.com/be5invis/Iosevka)
 - [霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
-- [小赖字体](https://github.com/lxgw/kose-font)
 - [更纱黑体](https://github.com/be5invis/Sarasa-Gothic)
 
 其他阅读
@@ -65,19 +64,19 @@
 
 > 非常感谢你对米哈游校园招聘的关注！十分感谢你参加米哈游校园招聘职位的面试。很抱歉经过慎重评估，你暂时不合适当前的岗位需求。别灰心！我们已将你的简历加入冒险家储备库，并对你的应聘信息严格保密。后续如有合适的岗位开放，我们将第一时间和你联系！少年的征途是星辰大海，而米哈游一直在路上。期待再见的那天！我们一起完成拯救世界的约定呀！
 
-- **feat**: feature 引入新功能
+- **feat**: 引入新功能
 - **fix**: 错误修正
-- **style**: 更新代码样式, 例如使用 clang-format 或 prettier
+- **style**: 更新样式, 例如 clang-format 或 prettier
 - **refactor**: 重构代码
-- **test**: 测试代码
-- **docs**: 更新文档, 例如 README.md
-- **perf**: performance 性能优化
+- **test**: 创建/更新测试, 例如 jtest
+- **docs**: 创建/更新文档, 例如 README.md
+- **perf**: 性能优化
 - **chore**: 定期代码维护
-
-- **feat**: Introduce new features
-- **fix**: Bug fix
-- **docs**: Update documentations
-- **style**: Updates related to styling
-- **refactor**: Refactor code
-- **test**: Update code related to testing
-- **chore**: Regular code maintenance
+- feat: Introduce new feature
+- fix: Bug fix
+- style: Update styling
+- refactor: Refactor code
+- test: Create/Update testing
+- docs: Create/Update docs
+- perf: Performance Optimization
+- chore: Regular code maintenance
