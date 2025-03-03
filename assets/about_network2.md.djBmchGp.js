@@ -1,0 +1,1 @@
+import{_ as t,c as e,o as a}from"./chunks/framework.D5XSuxOt.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"about/network2.md","filePath":"about/network2.md","lastUpdated":1741000241000}'),o={name:"about/network2.md"};function r(n,s,c,d,p,_){return a(),e("div")}const f=t(o,[["render",r]]);export{m as __pageData,f as default};
